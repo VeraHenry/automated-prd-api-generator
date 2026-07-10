@@ -1,0 +1,225 @@
+You are Stage 2 of a recursive AI workflow.
+
+Input: A structured Product Requirements Document (PRD) generated in Stage 1.
+
+Your task is to transform the PRD into a production-ready relational database
+schema.
+
+Think carefully before generating the output.
+
+Identify:
+
+  - Every persistent entity
+  - Relationships between entities
+  - Primary keys
+  - Foreign keys
+  - Junction tables
+  - Constraints
+  - Indexes
+  - Lifecycle ENUMs
+  - Audit fields
+  - Domain events
+  - Webhook events
+
+Rules:
+
+  - Use ONLY information contained in the PRD.
+  - Normalize to Third Normal Form (3NF).
+  - Every table must have a primary key.
+  - Every foreign key must reference an existing table.
+  - Every many-to-many relationship must use a junction table.
+  - Recommend indexes for frequently queried fields.
+  - Include created_at and updated_at audit fields for every table.
+  - Convert lifecycle states into ENUM definitions.
+  - Preserve all business rules.
+  - Do not generate backend code.
+  - Do not generate APIs.
+  - Output ONLY valid JSON.
+
+Return the following schema exactly:{ "metadata": { "stage": "stage_2_database",
+"artifact_type": "database_schema", "version": "1.0.0", "generated_from":
+"finance_prd.json" },
+
+"database": { "name": "", "engine": "PostgreSQL", "version": "16" },
+
+"tables": [ { "name": "", "description": "", "columns": [ { "name": "", "type":
+"", "nullable": false, "primary_key": false, "foreign_key": null, "unique":
+false, "default": null, "description": "" } ], "audit_fields": [ "created_at",
+"updated_at" ] } ],
+
+"relationships": [ { "source_table": "", "target_table": "",
+"relationship_type": "one_to_one | one_to_many | many_to_many", "foreign_key":
+"", "description": "" } ],
+
+"junction_tables": [ { "name": "", "purpose": "", "related_tables": [] } ],
+
+"constraints": [ { "table": "", "type": "PRIMARY_KEY | FOREIGN_KEY | UNIQUE |
+CHECK", "definition": "" } ],
+
+"indexes": [ { "table": "", "columns": [], "unique": false, "reason": "" } ],
+
+"enums": [ { "name": "", "values": [] } ],
+
+"domain_events": [ { "name": "", "trigger": "", "producer": "", "consumers": [],
+"payload": [] } ],
+
+"webhook_events": [ { "name": "", "description": "", "http_method": "POST",
+"endpoint_example": "", "payload": [] } ] }Stage 1 PRD Input:
+
+({ "product_name": "DropRader", "one_line_pitch": "Real-time, customizable stock
+drop alerts synced directly with your brokerage portfolio.",
+"problem_statement": "Retail investors often suffer unexpected losses during
+sudden market downturns because they cannot monitor their stock portfolios 24/7,
+and existing alerting tools require tedious manual tracking setup rather than
+linking directly to actual portfolio holdings.", "assumptions": [ "A third-party
+brokerage aggregator (e.g., SnapTrade or Plaid) is available and provides
+secure, read-only access to user portfolios and holdings.", "A real-time
+financial market data feed is accessible to provide sub-minute stock price
+updates during market hours.", "Users will grant the mobile application
+permission to send push notifications.", "Stock drop thresholds are calculated
+as a percentage decline from the stock's daily market open price." ],
+"target_users": [ { "persona": "Active Retail Investor", "context": "Manages a
+personal portfolio of 10-30 individual stocks alongside a busy full-time
+career.", "primary_need": "To be immediately notified of sudden downward
+movements in specific high-risk holdings without having to constantly check
+market charts during work hours." }, { "persona": "Risk-Averse Long-Term
+Investor", "context": "Maintains a diversified portfolio and wants to protect
+capital from catastrophic market drops.", "primary_need": "An automated safety
+net that alerts them when any core holding drops below a predefined multi-day
+support percentage so they can re-evaluate their long-term thesis." } ],
+"actors": [ { "name": "Retail Investor", "type": "human", "role": "Connects
+brokerage accounts, configures personalized stock alert thresholds, and receives
+push notifications." }, { "name": "Stock Price Monitor", "type": "system",
+"role": "Continuously consumes real-time stock price feeds, evaluates current
+prices against active user alert configurations, and detects drop threshold
+breaches." }, { "name": "Brokerage Sync Engine", "type": "system", "role":
+"Periodically fetches and updates user portfolio holdings and stock quantities
+from connected brokerages." }, { "name": "Brokerage Aggregation Provider",
+"type": "external_service", "role": "Provides standardized APIs to connect to
+user brokerage accounts and retrieve real-time holding data." }, { "name":
+"Market Data Provider", "type": "external_service", "role": "Provides
+low-latency, real-time stock price and daily market open/close data feeds." }, {
+"name": "Push Notification Gateway", "type": "external_service", "role":
+"Delivers transactional mobile push notifications (e.g., Apple Push Notification
+Service, Firebase Cloud Messaging) to user devices." } ], "core_features": [ {
+"name": "Brokerage Account Integration", "user_problem": "Manually inputting and
+updating portfolio holdings is tedious, error-prone, and discourages user
+retention.", "priority": "P0" }, { "name": "Automated Portfolio Syncing",
+"user_problem": "Changes to a user's portfolio (buying/selling stocks) are not
+reflected in real-time, leading to obsolete alerts.", "priority": "P0" }, {
+"name": "Custom Drop Alert Configuration", "user_problem": "Investors have
+different risk tolerances for different assets and need to set individual
+percentage thresholds per stock.", "priority": "P0" }, { "name": "Real-time Drop
+Detection Engine", "user_problem": "Delayed market data leads to delayed
+notifications, causing users to miss the optimal window to manage their risk.",
+"priority": "P0" }, { "name": "Instant Push Notification Delivery",
+"user_problem": "Users need to be alerted immediately on their mobile devices
+when a threshold is breached, regardless of whether the app is open.",
+"priority": "P0" }, { "name": "Alert Debouncing and Cool-down", "user_problem":
+"Highly volatile stocks can repeatedly cross a threshold within minutes, causing
+notification fatigue.", "priority": "P1" } ], "user_stories": [ { "as_a":
+"Retail Investor", "i_want": "to securely link my brokerage account using a
+single sign-on interface", "so_that": "my current stock holdings are
+automatically imported into the app without manual entry", "related_feature":
+"Brokerage Account Integration" }, { "as_a": "Retail Investor", "i_want": "to
+set a custom drop threshold of 5% for my AAPL holding", "so_that": "I only
+receive alerts when AAPL experiences a notable drop that matches my personal
+risk profile", "related_feature": "Custom Drop Alert Configuration" }, { "as_a":
+"Retail Investor", "i_want": "to receive an immediate push notification on my
+phone when my TSLA holding drops by my configured 8% threshold", "so_that": "I
+can log into my broker and hedge or liquidate my position if necessary",
+"related_feature": "Instant Push Notification Delivery" }, { "as_a": "Retail
+Investor", "i_want": "the app to automatically remove or pause alerts for stocks
+I have completely sold", "so_that": "I do not receive irrelevant alerts for
+assets I no longer own", "related_feature": "Automated Portfolio Syncing" } ],
+"key_entities": [ { "name": "User", "description": "Represents a stock owned by
+a user. Stores the stock ticker symbol, quantity of shares held, average
+purchase price, and current portfolio association." "relationships": [ "Has many
+BrokerageConnections", "Has many AlertConfigurations", "Has many Devices" ],
+"lifecycle_states": [ "UNVERIFIED", "ACTIVE", "SUSPENDED" ] }, { "name":
+"Device", "description": "Represents a mobile device registered to receive push
+notifications for a user.", "relationships": [ "Belongs to User" ],
+"lifecycle_states": [ "ACTIVE", "INACTIVE" ] }, { "name": "BrokerageConnection",
+"description": "Represents the credentialed link to an external brokerage via an
+aggregation provider.", "relationships": [ "Belongs to User", "Has many
+Holdings" ], "lifecycle_states": [ "CONNECTED", "REAUTH_REQUIRED",
+"DISCONNECTED" ] }, { "name": "Holding", "description": "Represents a specific
+stock ticker and quantity currently owned by the user as of the last sync.",
+"relationships": [ "Belongs to BrokerageConnection", "Has many
+AlertConfigurations" ], "lifecycle_states": [ "ACTIVE", "LIQUIDATED" ] }, {
+"name": "AlertConfiguration", "description": "Stores a user's alert preferences
+for a specific stock, including the customizable threshold percentage,
+notification preferences, and monitoring settings." "relationships": [ "Belongs
+to User", "Belongs to Holding", "Has many AlertTriggers" ], "lifecycle_states":
+[ "ACTIVE", "PAUSED", "ARCHIVED" ] }, { "name": "AlertTrigger", "description":
+"Represents an alert generated when a stock reaches its configured threshold.
+Tracks the trigger time, notification status, and delivery outcome."
+"relationships": [ "Belongs to AlertConfiguration" ], "lifecycle_states": [
+"triggered", "queued", "sent", "delivered", "failed", "dismissed" ]
+"business_rules": [ "Alert percentage thresholds must be positive values
+between 0.1% and 99.9%.", "Drop percentages are calculated against the current
+trading day's market open price for the asset.", "Real-time monitoring and alert
+evaluations only run during official US equity market hours (Monday through
+Friday, 9:30 AM to 4:00 PM EST, excluding market holidays).", "To prevent
+notification spam, an AlertConfiguration enters a cool-down state once triggered
+and cannot trigger again for the same ticker until the next trading day, unless
+manually reset by the user.", "If a Holding's quantity falls to 0 (liquidated),
+any associated AlertConfiguration must be automatically transitioned to the
+ARCHIVED state." ], "edge_cases": [ "A stock gaps down significantly at market
+open (e.g., opens 12% lower than the previous day's close). The system must
+trigger alerts based on the open price to current intraday price, rather than
+triggering instantly on the open price itself unless the open price is evaluated
+against the previous close.", "A user's brokerage token expires while they have
+active alerts. The system must notify the user to re-authenticate and mark the
+BrokerageConnection as REAUTH_REQUIRED, but continue monitoring cached tickers
+if safety rules allow.", "The external market data feed experiences a temporary
+outage. The system must detect stale data and pause alert evaluations to prevent
+false triggers, resuming when the connection is restored.", "The user quickly
+buys and sells the same stock multiple times within a trading day. The sync
+engine must reconcile holding quantities to prevent orphaned alerts." ],
+"acceptance_criteria": [ { "feature": "Brokerage Account Integration",
+"criteria": [ "User can successfully connect their account using a secure OAuth
+flow with the aggregation provider.", "Successfully linked accounts populate the
+User's holdings data within 60 seconds of connection.", "Credentials are
+encrypted at rest, and the system never stores direct brokerage login
+credentials." ] }, { "feature": "Custom Drop Alert Configuration", "criteria": [
+"Users can set, update, or delete a drop percentage threshold for any stock in
+their synced portfolio.", "Changes to threshold configurations must take effect
+in the active monitoring engine within 10 seconds of saving.", "The user
+interface prevents setting threshold values outside the 0.1% to 99.9% range." ]
+}, { "feature": "Real-time Drop Detection Engine", "criteria": [ "The system
+must process real-time price updates and evaluate them against active
+AlertConfigurations within 5 seconds of receipt.", "Alert calculations must
+accurately handle stock splits or corporate actions using adjusted data where
+available." ] }, { "feature": "Instant Push Notification Delivery", "criteria":
+[ "Push notifications must be dispatched to the registered device within 3
+seconds of an alert state trigger.", "The notification payload must display the
+ticker symbol, current price, configured threshold, and the calculated
+percentage drop." ] } ], "success_metrics": [ "Alert Dispatch Latency: Average
+time elapsed between a market price drop breach and the push notification
+arriving on the user's device is under 5 seconds.", "Portfolio Sync Success
+Rate: Over 98% of periodic brokerage sync operations complete successfully
+without requiring immediate user intervention.", "Monthly Active Users (MAU)
+Retention: Percentage of users who keep at least one active alert configuration
+enabled and brokerage account connected month-over-month.", "Notification
+Click-Through Rate: Percentage of users who tap on the push notification to open
+the app and view their portfolio status." ], "out_of_scope": [ "Supporting
+alerts for cryptocurrency, commodities, or options contract holdings.",
+"Executing trades, automated liquidations, or placing stop-loss orders directly
+within the app.", "Predictive price forecasting or automated portfolio risk
+analysis advice.", "Supporting non-US stock exchanges and market data feeds." ],
+"technical_considerations": [ "High-write database load: The monitoring engine
+will generate a high volume of price evaluation reads and transactional writes
+when thresholds are breached. Implement in-memory state tracking (e.g., Redis)
+for active alert evaluation to protect the primary relational database.", "Scale
+of WebSocket connections: Consuming real-time market feeds requires a
+persistent, high-throughput WebSocket connection to the market data provider
+with automatic reconnection logic.", "Notification throttling: Implement an
+queue-based dispatch mechanism (e.g., RabbitMQ or AWS SQS) to handle sudden
+spikes in notification deliveries during systemic market-wide drops." ],
+"non_functional_requirements": [ "Reliability: The real-time alert processing
+system must achieve 99.9% uptime during active market hours.", "Security: All
+API communications must be encrypted in transit using TLS 1.3, and user
+portfolio data must be encrypted at rest using AES-256.", "Latency: The
+end-to-end latency from market feed tick to notification payload construction
+must not exceed 2 seconds." ] })
