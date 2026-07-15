@@ -270,7 +270,7 @@ token validation returns expired credentials.", "producer": "Brokerage Sync
 Engine", "consumers": [ "Notification Service", "Email Coordinator" ],
 "payload": [ "connection_id", "user_id", "provider_name" ] } ],
 
-"webhooks": [ { "name": "brokerage.connected", "source_event":"MarketDropDetectedEvent", "trigger": "Fires upon successful
+"webhooks": [ { "name": "brokerage.connected", "source_event":"BrokerageConnectedEvent", "trigger": "Fires upon successful
 completion of OAuth account links using aggregation software.", "method":
 "POST", "payload": { "type": "object", "properties": { "event": { "type":
 "string", "example": "brokerage.connected" }, "timestamp": { "type": "string",
