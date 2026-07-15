@@ -499,17 +499,53 @@ token validation returns expired credentials.", "producer": "Brokerage Sync
 Engine", "consumers": [ "Notification Service", "Email Coordinator" ],
 "payload": [ "connection_id", "user_id", "provider_name" ] } ],
 
-"webhook_events": [ { "name": "webhook.alert.triggered", "description":
-"Triggered when a stock threshold breach occurs, alerting registered third-party
-endpoints of the event details.", "http_method": "POST", "endpoint_example":
-"https://api.userdomain.com/webhooks/alerts", "payload": [ "event_type",
-"alert_trigger_id", "ticker_symbol", "triggered_price", "daily_open_price",
-"calculated_drop_percentage", "triggered_at" ] }, { "name":
-"webhook.connection.reauth_required", "description": "Triggered when a brokerage
-credential token expires or is invalidated, requiring manual user
-intervention.", "http_method": "POST", "endpoint_example":
-"https://api.userdomain.com/webhooks/connections", "payload": [ "event_type",
-"connection_id", "user_id", "provider_name", "status", "detected_at" ] } ] }
+"webhooks": [ { "name": "brokerage.connected", "source_event":"BrokerageConnectedEvent", "trigger": "Fires upon successful
+completion of OAuth account links using aggregation software.", "method":
+"POST", "payload": { "type": "object", "properties": { "event": { "type":
+"string", "example": "brokerage.connected" }, "timestamp": { "type": "string",
+"format": "date-time" }, "data": { "type": "object", "properties": {
+"connection_id": { "type": "string", "format": "uuid" }, "user_id": { "type":
+"string", "format": "uuid" }, "provider_name": { "type": "string" },
+"external_account_id": { "type": "string" } }, "required": ["connection_id",
+"user_id", "provider_name", "external_account_id"] } }, "required": ["event",
+"timestamp", "data"] } }, { "name": "holding.liquidated", "source_event":"HoldingLiquidatedEvent", "trigger": "Fires when
+quantity of a synced holding returns 0, indicating the asset was fully sold.",
+"method": "POST", "payload": { "type": "object", "properties": { "event": {
+"type": "string", "example": "holding.liquidated" }, "timestamp": { "type":
+"string", "format": "date-time" }, "data": { "type": "object", "properties": {
+"holding_id": { "type": "string", "format": "uuid" }, "ticker_symbol": { "type":
+"string" }, "brokerage_connection_id": { "type": "string", "format": "uuid" } },
+"required": ["holding_id", "ticker_symbol", "brokerage_connection_id"] } },
+"required": ["event", "timestamp", "data"] } }, { "name":
+"alert_configuration.archived", "source_event":"AlertConfigurationArchivedEvent", "trigger": "Fires automatically when an active
+alert rule is archived due to a holding being liquidated.", "method": "POST",
+"payload": { "type": "object", "properties": { "event": { "type": "string",
+"example": "alert_configuration.archived" }, "timestamp": { "type": "string",
+"format": "date-time" }, "data": { "type": "object", "properties": {
+"alert_configuration_id": { "type": "string", "format": "uuid" }, "user_id": {
+"type": "string", "format": "uuid" }, "ticker_symbol": { "type": "string" } },
+"required": ["alert_configuration_id", "user_id", "ticker_symbol"] } },
+"required": ["event", "timestamp", "data"] } }, { "name":
+"market.drop_detected", "source_event":"MarketDropDetectedEvent", "trigger": "Fires within sub-seconds of a streaming tick
+drop breaching active alert configuration parameters.", "method": "POST",
+"payload": { "type": "object", "properties": { "event": { "type": "string",
+"example": "market.drop_detected" }, "timestamp": { "type": "string", "format":
+"date-time" }, "data": { "type": "object", "properties": {
+"alert_configuration_id": { "type": "string", "format": "uuid" },
+"ticker_symbol": { "type": "string" }, "triggered_price": { "type": "number" },
+"daily_open_price": { "type": "number" }, "calculated_drop_percentage": {
+"type": "number" } }, "required": ["alert_configuration_id", "ticker_symbol",
+"triggered_price", "daily_open_price", "calculated_drop_percentage"] } },
+"required": ["event", "timestamp", "data"] } }, { "name":
+"connection.reauth_requested", "source_event":"ConnectionReauthRequestedEvent","trigger": "Fires during sync attempts if token
+validation returns expired credentials.", "method": "POST", "payload": { "type":
+"object", "properties": { "event": { "type": "string", "example":
+"connection.reauth_requested" }, "timestamp": { "type": "string", "format":
+"date-time" }, "data": { "type": "object", "properties": { "connection_id": {
+"type": "string", "format": "uuid" }, "user_id": { "type": "string", "format":
+"uuid" }, "provider_name": { "type": "string" } }, "required": ["connection_id",
+"user_id", "provider_name"] } }, "required": ["event", "timestamp", "data"] } }
+] }
 Stage 3 Backend Models
 
 { "metadata": { "stage": "stage_3_backend_models", "artifact_type":
