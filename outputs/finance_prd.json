@@ -64,9 +64,10 @@ can log into my broker and hedge or liquidate my position if necessary",
 Investor", "i_want": "the app to automatically remove or pause alerts for stocks
 I have completely sold", "so_that": "I do not receive irrelevant alerts for
 assets I no longer own", "related_feature": "Automated Portfolio Syncing" } ],
-"key_entities": [ { "name": "User", "description": "Represents a stock owned by
-a user. Stores the stock ticker symbol, quantity of shares held, average
-purchase price, and current portfolio association." "relationships": [ "Has many
+"key_entities": [ { "name": "User", "description": {
+  "name": "User",
+  "description": "Represents a registered retail investor who connects brokerage accounts, manages alert configurations, and receives notifications when configured stock price thresholds are reached."
+}." "relationships": [ "Has many
 BrokerageConnections", "Has many AlertConfigurations", "Has many Devices" ],
 "lifecycle_states": [ "UNVERIFIED", "ACTIVE", "SUSPENDED" ] }, { "name":
 "Device", "description": "Represents a mobile device registered to receive push
