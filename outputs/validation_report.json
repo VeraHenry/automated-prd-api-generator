@@ -1,0 +1,48 @@
+{ "metadata": { "stage": "stage_5_validation", "artifact_type":
+"architecture_validation_report", "version": "1.0.0", "validated_artifacts": [
+"finance_prd.json", "finance_schema.json", "backend_models.json",
+"openapi_spec.json" ] },
+
+"summary": { "overall_status": "PASS", "critical_issues": 0, "high_issues": 0,
+"medium_issues": 0, "low_issues": 1 },
+
+"traceability": { "entities": [ "User", "Device", "BrokerageConnection",
+"Holding", "AlertConfiguration", "AlertTrigger" ], "relationships": [ "User has
+many Devices", "User has many BrokerageConnections", "User has many
+AlertConfigurations", "BrokerageConnection has many Holdings", "Holding has many
+AlertConfigurations", "AlertConfiguration has many AlertTriggers" ],
+"business_rules": [ "Alert percentage thresholds constrained precisely from 0.1%
+to 99.9%", "Real-time monitoring and price drop evaluation runs only during US
+equity market hours", "Trigger debounce and cool-down resets prevent
+notification spam on a daily basis", "Holding liquidation (quantity reaching 0)
+automatically archives any associated active AlertConfigurations" ], "events": [
+"BrokerageConnectedEvent", "HoldingLiquidatedEvent",
+"AlertConfigurationArchivedEvent", "MarketDropDetectedEvent",
+"ConnectionReauthRequestedEvent" ], "api_resources": [ "User",
+"BrokerageConnection", "AlertConfiguration" ] },
+
+"validation_results": [ { "severity": "Low", "category": "Completeness",
+"artifact": "openapi_spec.json", "finding": "The database schema indexes
+'alert_triggers' on the configuration ID to optimize the retrieval of
+'historical notification lists' for user audit logs. However, the API
+specification only exposes triggers nested under a specific alert configuration
+via 'GET /alert-configurations/{id}/triggers'. It does not expose a user-level
+consolidated endpoint (e.g., 'GET /users/{id}/triggers') to view all recent
+historical triggers across different tickers, requiring multiple separate
+requests to render a notification history page.", "recommendation": "Expose a
+user-level endpoint such as 'GET /users/{id}/triggers' or allow querying a root
+'/triggers' resource with a 'user_id' filter to easily build historical
+notification feeds in the user interface." } ],
+
+"coverage": { "prd_entities": 6, "database_tables": 6, "backend_models": 6,
+"api_resources": 3, "coverage_percentage": 100 },
+
+"consistency_checks": { "naming": "PASS", "relationships": "PASS",
+"business_rules": "PASS", "validation_rules": "PASS", "events": "PASS",
+"webhooks": "PASS" },
+
+"final_recommendation": "The architecture exhibits high cohesion and complete
+structural traceability. All domain entities, lifecycle states, and database
+constraints map logically through backend models and REST resources. The
+low-severity suggestion to support a consolidated user trigger history endpoint
+will improve API utility and performance for client audit logging." }
